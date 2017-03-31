@@ -13,11 +13,11 @@ namespace app.testing
 {
 	public partial class Form1 : Form
 	{
-		private lib.db.doc.niterdoc.NiterDocEntities ctx;
+		private lib.db.doc.niterdoc.NiterDocEntitiesDoc ctx;
 		public Form1()
 		{
 			InitializeComponent();
-			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
+			ctx = new lib.db.doc.niterdoc.NiterDocEntitiesDoc();
 			ctx.Database.Log = Console.WriteLine;
 		}
 
