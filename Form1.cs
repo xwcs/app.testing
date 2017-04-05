@@ -24,6 +24,7 @@ namespace app.testing
 		private void simpleButton1_Click(object sender, EventArgs e)
 		{
 			ctx.edizione.Load();
+			
 			refreshGrid();
 		}
 		
