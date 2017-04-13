@@ -116,6 +116,10 @@
       <Project>{64DD06EA-E442-4101-99B5-351C6A160472}</Project>
       <Name>xwcs.core</Name>
     </ProjectReference>
+    <ProjectReference Include="C:\Projekty\Egaf\app.main\lib.db\lib.db.csproj">
+      <Project>{ad59cb29-f5db-43db-944a-66196a972e4b}</Project>
+      <Name>lib.db</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
