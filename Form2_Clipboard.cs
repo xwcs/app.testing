@@ -10,6 +10,8 @@ using System.Windows.Forms;
 using System.Data.Entity;
 using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.XtraRichEdit;
+using xwcs.core.db;
+using xwcs.core.evt;
 
 namespace app.testing
 {
@@ -21,7 +23,9 @@ namespace app.testing
 		RichEditControl a;
 		public Form2_Clipboard()
 		{
-			InitializeComponent();
+            SEventProxy.InvokeDelegate = this;
+
+            InitializeComponent();
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 			ctx.Database.Log = Console.WriteLine;
 
@@ -33,35 +37,30 @@ namespace app.testing
 
 		private void simpleButton1_Click(object sender, EventArgs e)
 		{
-			ctx.iter.Load();
+			
 			
 			refreshGrid();
 		}
 		
 		private void refreshGrid()
 		{
-			_bs.DataSource = ctx.iter.ToList();
-			gridControl1.DataSource = _bs.DataSource;
+			_bs.DataSource = ctx.iter.Take(100).ToList();
+			gridControl1.DataSource = _bs;
 		}
-		private void simpleButton2_Click(object sender, EventArgs e)
+
+        
+        private void simpleButton2_Click(object sender, EventArgs e)
 		{
 			lib.db.doc.niterdoc.iter currentIter = _bs.Current as lib.db.doc.niterdoc.iter;
-			var originalEntity = ctx.iter.AsNoTracking().FirstOrDefault(o => o.id == currentIter.id);
-			
-			lib.db.doc.niterdoc.xwbo_iter xwbo = ctx2.xwbo_iter.AsNoTracking().FirstOrDefault(o => o.ndoc == originalEntity.ndoc_xwbo_iter);
-			xwbo.ncopia += 1;
-			ctx2.xwbo_iter.Add(xwbo);
-			ctx2.SaveChanges();
+			var originalEntity = ctx.iter.Include("xwbo_iter").AsNoTracking().FirstOrDefault(o => o.id == currentIter.id);
 
-
-			lib.db.doc.niterdoc.xwbo_iter xwbonew = ctx.xwbo_iter.AsNoTracking().FirstOrDefault(o => o.nrec == xwbo.nrec && o.ncopia == xwbo.ncopia);
-
-
-			ctx.iter.Add(originalEntity);	
-
-			originalEntity.ncopia += 1;
-			originalEntity.ndoc_xwbo_iter = xwbonew.ndoc;
-			ctx.iter.Add(originalEntity);
+            
+            ctx.xwbo_iter.Add(originalEntity.xwbo_iter);
+            ctx.iter.Add(originalEntity);
+            originalEntity.ncopia += 1;
+            originalEntity.xwbo_iter.ncopia += 1;
+			//originalEntity.ndoc_xwbo_iter = xwbonew.ndoc;
+			//ctx.iter.Add(originalEntity);
 			ctx.SaveChanges();
 		}
 	}
