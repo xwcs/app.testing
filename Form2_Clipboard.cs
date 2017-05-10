@@ -23,16 +23,23 @@ namespace app.testing
 		RichEditControl a;
 		public Form2_Clipboard()
 		{
+            xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
+
             SEventProxy.InvokeDelegate = this;
 
             InitializeComponent();
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 			ctx.Database.Log = Console.WriteLine;
+            ctx.SetAsCurrentDbContext(); // eed for lazy load in entities
 
+            /*
 			ctx2 = new lib.db.doc.niterdoc.NiterDocEntities();
 			ctx2.Database.Log = Console.WriteLine;
+            */
 
 			_bs = new BindingSource();
+
+            gridView1.OptionsEditForm.CustomEditFormLayout = new NotesEditForm();
 		}
 
 		private void simpleButton1_Click(object sender, EventArgs e)
@@ -43,11 +50,31 @@ namespace app.testing
 		
 		private void refreshGrid()
 		{
-			_bs.DataSource = ctx.iter.Take(100).ToList();
-			gridControl1.DataSource = _bs;
+            _bs.PositionChanged += _bs_PositionChanged;
+            //_bs.DataSource = ctx.iter.Take(100).ToList();
+            _bs.DataSource = ctx.iter_in_xwbo_note.Take(100).ToList();
+            gridControl1.DataSource = _bs;
 		}
 
-        
+        private void _bs_PositionChanged(object sender, EventArgs e)
+        {
+            //handle current xw notes creation
+            lib.db.doc.niterdoc.iter_in_xwbo_note tt = _bs.Current as lib.db.doc.niterdoc.iter_in_xwbo_note;
+
+            // load note
+            if (!ctx.Entry(tt).Reference("xwbo_note").IsLoaded)
+            {
+                ctx.Entry(tt).Reference("xwbo_note").Load();
+            }
+
+            //if not existent create it
+            if(ReferenceEquals(null, tt.xwbo_note))
+            {
+                tt.xwbo_note = new lib.db.doc.niterdoc.xwbo_note();
+                ctx.xwbo_note.Add(tt.xwbo_note);
+            }
+        }
+
         private void simpleButton2_Click(object sender, EventArgs e)
 		{
 			lib.db.doc.niterdoc.iter currentIter = _bs.Current as lib.db.doc.niterdoc.iter;
@@ -62,5 +89,12 @@ namespace app.testing
 			//ctx.iter.Add(originalEntity);
 			ctx.SaveChanges();
 		}
-	}
+
+        private void simpleButton3_Click(object sender, EventArgs e)
+        {
+            lib.db.doc.niterdoc.iter_in_xwbo_note tt = _bs.Current as lib.db.doc.niterdoc.iter_in_xwbo_note;
+
+            ctx.SaveChanges();
+        }
+    }
 }

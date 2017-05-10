@@ -88,6 +88,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="NotesEditForm.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NotesEditForm.Designer.cs">
+      <DependentUpon>NotesEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form2_Clipboard.resx">
@@ -95,6 +101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotesEditForm.resx">
+      <DependentUpon>NotesEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -121,6 +130,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\lib.core\lib.core.csproj">
+      <Project>{8325bc08-22c6-44ef-b634-bf7a88393e52}</Project>
+      <Name>lib.core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\lib.db\lib.db.doc.niterdoc\lib.db.doc.niterdoc.csproj">
       <Project>{d05e4c2e-bdb3-4d39-b352-932c423b6321}</Project>
       <Name>lib.db.doc.niterdoc</Name>
