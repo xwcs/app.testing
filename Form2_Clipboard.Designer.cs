@@ -58,7 +58,7 @@
 			// 
 			this.gridView1.GridControl = this.gridControl1;
 			this.gridView1.Name = "gridView1";
-			this.gridView1.OptionsBehavior.Editable = false;
+			this.gridView1.OptionsBehavior.EditingMode = DevExpress.XtraGrid.Views.Grid.GridEditingMode.EditForm;
 			this.gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
 			// 
 			// tableLayoutPanel1

@@ -23,7 +23,9 @@ namespace app.testing
 		RichEditControl a;
 		public Form2_Clipboard()
 		{
-            SEventProxy.InvokeDelegate = this;
+			xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
+
+			SEventProxy.InvokeDelegate = this;
 
             InitializeComponent();
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
@@ -43,7 +45,8 @@ namespace app.testing
 		
 		private void refreshGrid()
 		{
-			_bs.DataSource = ctx.iter.Take(100).ToList();
+			//_bs.DataSource = ctx.iter.Take(100).ToList();
+			_bs.DataSource = ctx.iter_in_xwbo_note.Take(100).ToList();
 			gridControl1.DataSource = _bs;
 		}
 
