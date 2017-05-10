@@ -18,9 +18,9 @@ namespace app.testing
 	public partial class Form2_Clipboard : Form
 	{
 		private lib.db.doc.niterdoc.NiterDocEntities ctx;
-		private lib.db.doc.niterdoc.NiterDocEntities ctx2;
+		//private lib.db.doc.niterdoc.NiterDocEntities ctx2;
 		BindingSource _bs;
-		RichEditControl a;
+		//RichEditControl a;
 		public Form2_Clipboard()
 		{
             xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());

@@ -16,6 +16,8 @@ namespace app.testing
         public NotesEditForm()
         {
             InitializeComponent();
+
+
             SetBoundFieldName(richTextBox1, "xwnote");
             SetBoundPropertyName(richTextBox1, "Text");
             SetBoundFieldName(textEdit1, "nnota");
