@@ -12,6 +12,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using DevExpress.XtraRichEdit;
 using xwcs.core.db;
 using xwcs.core.evt;
+using System.Net;
+using System.Collections.Specialized;
+using System.Net.Http;
+using System.IO;
 
 namespace app.testing
 {
@@ -90,11 +94,81 @@ namespace app.testing
 			ctx.SaveChanges();
 		}
 
+
+        public string Upload(string url, List<KeyValuePair<string, string>> requestParameters, MemoryStream file)
+        {
+
+            HttpClientHandler httpClientHandler = new HttpClientHandler()
+            {
+                Proxy = new WebProxy(string.Format("{0}:{1}", "127.0.0.1", 8888), false),
+                PreAuthenticate = false,
+                UseDefaultCredentials = false,
+            };
+
+            var client = new HttpClient(httpClientHandler);
+            client.DefaultRequestHeaders.Add("Accept-Language", " en-US");
+            client.DefaultRequestHeaders.Add("Accept", " text/html, application/xhtml+xml, */*");
+            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)");
+
+            var content = new MultipartFormDataContent();
+
+            content.Add(new StreamContent(file));
+            var addMe = new FormUrlEncodedContent(requestParameters);
+
+            content.Add(addMe);
+            var result = client.PostAsync(url, content);
+            return result.Result.ToString();
+        }
+
         private void simpleButton3_Click(object sender, EventArgs e)
         {
-            lib.db.doc.niterdoc.iter_in_xwbo_note tt = _bs.Current as lib.db.doc.niterdoc.iter_in_xwbo_note;
+            //lib.db.doc.niterdoc.iter_in_xwbo_note tt = _bs.Current as lib.db.doc.niterdoc.iter_in_xwbo_note;
 
-            ctx.SaveChanges();
+            //ctx.SaveChanges();
+
+
+
+
+
+            
+            WebClient client = new WebClient();
+            NameValueCollection parameters = new NameValueCollection();
+            //List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+            //parameters.Add(new KeyValuePair<string, string>("MAX_FILE_SIZE", "100000000"));
+            parameters.Add("MAX_FILE_SIZE", "100000000");
+            //parameters.Add("db", "niter");
+
+            client.Proxy = new WebProxy("127.0.0.1", 8888);
+            client.QueryString = parameters;
+
+
+
+
+            try
+            {
+                Uri uri = new Uri("http://localhost:4854/test.html");
+
+
+/*
+                MemoryStream inMemoryCopy = new MemoryStream();
+                using (FileStream fs = File.OpenRead(@"c:\tmp\niter.sql"))
+                {
+                    fs.CopyTo(inMemoryCopy);
+                }
+
+*/
+                //string response = Upload("http://localhost.fiddler:4854/attach/put?db=niter", parameters, inMemoryCopy);
+
+
+                var responseBytes = client.UploadFile("http://localhost.fiddler:4854/attach/put?db=niter", "POST", @"c:\tmp\wtf.xml");
+
+                string response = Encoding.ASCII.GetString(responseBytes);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            
         }
     }
 }
