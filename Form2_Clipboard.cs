@@ -34,7 +34,6 @@ namespace app.testing
             InitializeComponent();
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 			ctx.Database.Log = Console.WriteLine;
-            ctx.SetAsCurrentDbContext(); // eed for lazy load in entities
 
             /*
 			ctx2 = new lib.db.doc.niterdoc.NiterDocEntities();
