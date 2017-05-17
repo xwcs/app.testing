@@ -17,9 +17,9 @@ namespace app.testing
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			//Application.Run(new Form1());
-			//Application.Run(new lib.db.states.iter.IterSMTestForm());
+			Application.Run(new lib.db.states.iter.IterSMTestForm());
 			//Application.Run(new lib.db.states.bt.BtSMTestForm());
-			Application.Run(new Form2_Clipboard());
+			//Application.Run(new Form2_Clipboard());
 		}
 	}
 }
