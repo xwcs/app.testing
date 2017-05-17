@@ -17,12 +17,15 @@ using System.Collections.Specialized;
 using System.Net.Http;
 using System.IO;
 
+using DevExpress.XtraReports.UI;
+using DevExpress.XtraReports.Parameters;
+
 namespace app.testing
 {
 	public partial class Form2_Clipboard : Form
 	{
 		private lib.db.doc.niterdoc.NiterDocEntities ctx;
-		//private lib.db.doc.niterdoc.NiterDocEntities ctx2;
+		private lib.db.titles.niterdoc.NiterTitlesEntities ctx2;
 		BindingSource _bs;
 		//RichEditControl a;
 		public Form2_Clipboard()
@@ -35,10 +38,12 @@ namespace app.testing
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 			ctx.Database.Log = Console.WriteLine;
 
-            /*
-			ctx2 = new lib.db.doc.niterdoc.NiterDocEntities();
+			ctx2 = new lib.db.titles.niterdoc.NiterTitlesEntities();
 			ctx2.Database.Log = Console.WriteLine;
-            */
+
+
+
+			lib.db.titles.niterdoc.v_iter tmp = new lib.db.titles.niterdoc.v_iter();
 
 			_bs = new BindingSource();
 
@@ -136,18 +141,14 @@ namespace app.testing
             //parameters.Add(new KeyValuePair<string, string>("MAX_FILE_SIZE", "100000000"));
             parameters.Add("MAX_FILE_SIZE", "100000000");
             //parameters.Add("db", "niter");
-
             client.Proxy = new WebProxy("127.0.0.1", 8888);
             client.QueryString = parameters;
-
 
 
 
             try
             {
                 Uri uri = new Uri("http://localhost:4854/test.html");
-
-
 /*
                 MemoryStream inMemoryCopy = new MemoryStream();
                 using (FileStream fs = File.OpenRead(@"c:\tmp\niter.sql"))
@@ -157,10 +158,7 @@ namespace app.testing
 
 */
                 //string response = Upload("http://localhost.fiddler:4854/attach/put?db=niter", parameters, inMemoryCopy);
-
-
                 var responseBytes = client.UploadFile("http://localhost.fiddler:4854/attach/put?db=niter", "POST", @"c:\tmp\wtf.xml");
-
                 string response = Encoding.ASCII.GetString(responseBytes);
             }
             catch (Exception ex)
@@ -169,5 +167,76 @@ namespace app.testing
             }
             
         }
-    }
+
+		private void simpleButton4_Click(object sender, EventArgs e)
+		{
+			/*
+			ctx.tipologie.Load();
+			ctx.tipologie_view.Load();
+			foreach (var tmp in ctx.tipologie)
+			{
+				lib.db.doc.niterdoc.view.tipologie_view aaa = new lib.db.doc.niterdoc.view.tipologie_view(tmp);
+				ctx.tipologie_view.Add(aaa);
+			}
+			*/
+			/*			
+			var data = ctx.tipologie
+								//.Where(t => t.id == 1)
+								.Select(rhs => new lib.db.doc.niterdoc.view.tipologie_view() {
+									id = rhs.id,
+									tipo = rhs.tipo,
+									disp_abbrev = rhs.disp_abbrev,
+									disposizione = rhs.disposizione,
+									disposizione_breve = rhs.disposizione_breve,
+									organo = rhs.organo,
+									organo_breve = rhs.organo_breve,
+									sezione = rhs.sezione,
+									localita = rhs.localita,
+									valenza = rhs.valenza,
+									disabilitato = rhs.disabilitato
+								})
+								.ToList();
+			*/		
+
+
+			xwcs.core.ui.print.PrintDesignerForm form = new xwcs.core.ui.print.PrintDesignerForm();			
+			form.Show();
+
+
+			/*
+			var data = ctx.tipologie
+								//.Where(t => t.id == 1)
+								.Select(t => new lib.db.doc.niterdoc.view.tipologie_view(t))
+								.ToList();
+			var data1 = (from t in ctx.tipologie
+						where t.id == 1
+						select new lib.db.doc.niterdoc.view.tipologie_view(t)).ToList();
+					*/
+
+		}
+
+		private void simpleButton5_Click(object sender, EventArgs e)
+		{
+			//TODO : dat do try
+			XtraReport report = XtraReport.FromFile("c:\\7\\XtraReport2.repx", true);
+			if (report != null)
+			{
+				ReportPrintTool printTool = new ReportPrintTool(report);
+
+				report.Tag = "FromApp";
+
+
+				SEventProxy.BlockModelEvents();
+				report.DataSource = ctx2.v_iter
+									 .Where(s => s.id < 10)
+									 //.Include("tipologie")
+									 //.Include("editori")
+									 .AsNoTracking()
+									 .ToList();
+
+				SEventProxy.AllowModelEvents();
+				printTool.ShowPreviewDialog();
+			}
+		}
+	}
 }
