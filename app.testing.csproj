@@ -45,6 +45,8 @@
     <Reference Include="DevExpress.XtraGrid.v16.2, Version=16.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraLayout.v16.2, Version=16.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.XtraPrinting.v16.2, Version=16.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraReports.v16.2, Version=16.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v16.2.Extensions, Version=16.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraRichEdit.v16.2, Version=16.2.4.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
@@ -137,6 +139,18 @@
     <ProjectReference Include="..\lib.db\lib.db.doc.niterdoc\lib.db.doc.niterdoc.csproj">
       <Project>{d05e4c2e-bdb3-4d39-b352-932c423b6321}</Project>
       <Name>lib.db.doc.niterdoc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\lib.db\lib.db.titles.niterdoc\lib.db.titles.niterdoc.csproj">
+      <Project>{e919de39-93c6-48a5-9514-93598d1d3063}</Project>
+      <Name>lib.db.titles.niterdoc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\plugin.documents\plugin.documents.csproj">
+      <Project>{800241cf-8b8d-4ba7-a575-d019f246b318}</Project>
+      <Name>plugin.documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\xwcs.core.ui\xwcs.core.ui.csproj">
+      <Project>{13078a0f-c037-44e2-97a3-fddef2faed8b}</Project>
+      <Name>xwcs.core.ui</Name>
     </ProjectReference>
     <ProjectReference Include="..\xwcs.core\xwcs.core.csproj">
       <Project>{64DD06EA-E442-4101-99B5-351C6A160472}</Project>
