@@ -28,7 +28,7 @@ namespace app.testing
 		{
 			List<MyData> list = new List<MyData>();
 			list.Add(new MyData() { id = 1, text = "qwertyuiopasdfghjklzxcvbnm" });
-			list.Add(new MyData() { id = 2, text = "aaaaaaaaa\nbbbbbbb\ncccccc" });
+			list.Add(new MyData() { id = 2, text = "aaaaaaaaa\r\nbbbbbbb\r\ncccccc" });
 
 			gridControl1.DataSource = list;
 
