@@ -32,7 +32,7 @@ namespace app.testing
 
             ctx = new lib.db.doc.niterdoc.NiterDocEntities();
             ctx.Database.Log = Console.WriteLine;
-            DataTable dt = ctx.edit_classificazioni.AsEnumerable().ToDataTable();
+            //DataTable dt = ctx.edit_classificazioni.AsEnumerable().ToDataTable();
 
             bs = new BindingSource();
 
@@ -43,7 +43,7 @@ namespace app.testing
             treeList1.ParentFieldName = "parent_id";
             treeList1.OptionsBehavior.AutoPopulateColumns = true;
             treeList1.DataSource = bs;
-            bs.DataSource = dt;
+           // bs.DataSource = dt;
             
             treeList1.PopulateColumns();
 
@@ -53,9 +53,9 @@ namespace app.testing
         private void Bs_CurrentItemChanged(object sender, EventArgs e)
         {
             if (_starting) return;
-            lib.db.doc.niterdoc.edit_classificazioni cl = ctx.edit_classificazioni.Local.Where(c => c.id == (bs.Current as DataRowView).Row.Field<int>("id")).FirstOrDefault();
+            //lib.db.doc.niterdoc.edit_classificazioni cl = ctx.edit_classificazioni.Local.Where(c => c.id == (bs.Current as DataRowView).Row.Field<int>("id")).FirstOrDefault();
 
-            cl.SetItemFromRow((bs.Current as DataRowView).Row);
+            //cl.SetItemFromRow((bs.Current as DataRowView).Row);
         }
 
         /// <summary>
