@@ -20,7 +20,9 @@ namespace app.testing
 			//Application.Run(new lib.db.states.iter.IterSMTestForm());
 			//Application.Run(new lib.db.states.bt.BtSMTestForm());
 			//Application.Run(new Form2_Clipboard());
-			Application.Run(new MemoInGridForm());
+			//Application.Run(new MemoInGridForm());
+			//Application.Run(new Form3_MassiveReplace());
+			Application.Run(new Form4_EnableDisableControls());
 		}
 	}
 }

@@ -91,6 +91,18 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Form3_MassiveReplace.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form3_MassiveReplace.Designer.cs">
+      <DependentUpon>Form3_MassiveReplace.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form4_EnableDisableControls.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form4_EnableDisableControls.Designer.cs">
+      <DependentUpon>Form4_EnableDisableControls.cs</DependentUpon>
+    </Compile>
     <Compile Include="MemoInGridForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -105,11 +117,18 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SecurityEnabler.cs" />
     <EmbeddedResource Include="Form2_Clipboard.resx">
       <DependentUpon>Form2_Clipboard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form3_MassiveReplace.resx">
+      <DependentUpon>Form3_MassiveReplace.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form4_EnableDisableControls.resx">
+      <DependentUpon>Form4_EnableDisableControls.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MemoInGridForm.resx">
       <DependentUpon>MemoInGridForm.cs</DependentUpon>
@@ -153,6 +172,10 @@
     <ProjectReference Include="..\lib.db\lib.db.titles.niterdoc\lib.db.titles.niterdoc.csproj">
       <Project>{e919de39-93c6-48a5-9514-93598d1d3063}</Project>
       <Name>lib.db.titles.niterdoc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\plugin.baseTables\plugin.baseTables.csproj">
+      <Project>{11E1A319-0C88-4D83-B6B3-838F6A5E2B1D}</Project>
+      <Name>plugin.baseTables</Name>
     </ProjectReference>
     <ProjectReference Include="..\plugin.documents\plugin.documents.csproj">
       <Project>{800241cf-8b8d-4ba7-a575-d019f246b318}</Project>
