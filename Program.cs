@@ -21,7 +21,8 @@ namespace app.testing
             //Application.Run(new lib.db.states.bt.BtSMTestForm());
             //Application.Run(new Form2_Clipboard());
             //Application.Run(new MemoInGridForm());
-            Application.Run(new TreeViewForm());
+            //Application.Run(new TreeViewForm());
+            Application.Run(new InDesign());
         }
 	}
 }
