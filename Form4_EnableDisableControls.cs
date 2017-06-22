@@ -1,9 +1,12 @@
-﻿using System;
+﻿using DevExpress.XtraBars;
+using DevExpress.XtraEditors;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,37 +20,30 @@ namespace app.testing
 		{
 			InitializeComponent();
 
-			_se.registerControl(simpleButton1);
-			_se.registerControl(simpleButton2);
-			_se.registerControl(simpleButton3);
-			_se.registerControl(simpleButton4);
-			_se.registerControl(simpleButton5);
-			_se.registerControl(simpleButton6);
-			_se.registerControl(simpleButton7);
-			_se.registerControl(simpleButton8);
-			_se.registerControl(simpleButton9);
-			_se.registerControl(simpleButton10);
-			_se.registerControl(simpleButton11);
-			_se.registerControl(simpleButton12);
-			_se.registerControl(simpleButton13);
-			_se.registerControl(simpleButton14);
-			_se.registerControl(simpleButton15);
-			_se.registerControl(simpleButton16);
-			_se.registerControl(simpleButton17);
-			_se.registerControl(simpleButton18);
-			_se.registerControl(simpleButton19);
-			_se.registerControl(simpleButton20);
+			for(int i = 1; i <= 300; i++)
+			{
+				Type myType = this.GetType();
+				FieldInfo fi = myType.GetField("simpleButton" + i.ToString(), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+				if (fi != null)
+				{
+					SimpleButton btn = fi.GetValue(this) as SimpleButton;
+					if (btn != null) _se.registerControl(btn);
+				}
+			}
 
-			_se.registerControl(simpleButton23);
-			_se.registerControl(simpleButton24);
-			_se.registerControl(simpleButton25);
-			_se.registerControl(simpleButton26);
-			_se.registerControl(simpleButton27);
-			_se.registerControl(simpleButton28);
-			_se.registerControl(simpleButton29);
-			_se.registerControl(simpleButton30);
+			for (int i = 1; i <= 50; i++)
+			{
+				Type myType = this.GetType();
+				FieldInfo fi = myType.GetField("barButtonItem" + i.ToString(), System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public);
+				if (fi != null)
+				{
+					BarButtonItem btn = fi.GetValue(this) as BarButtonItem;
+					Component cc = btn;
+					if (btn != null) _se.registerControl(btn);
+				}
+			}
 
-			_se.registerControl(simpleButton31);
+
 			_se.registerControl(checkBox1);
 			_se.registerControl(checkBox2);
 			_se.registerControl(textBox1);
@@ -58,12 +54,16 @@ namespace app.testing
 
 		private void simpleButton21_Click(object sender, EventArgs e)
 		{
+			DrawingControl.SuspendDrawing(this);
 			_se.enableAllControls(true);
+			DrawingControl.ResumeDrawing(this);
 		}
 
 		private void simpleButton22_Click(object sender, EventArgs e)
 		{
+			DrawingControl.SuspendDrawing(this);
 			_se.enableAllControls(false);
+			DrawingControl.ResumeDrawing(this);
 		}
 	}
 }
