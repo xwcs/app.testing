@@ -73,6 +73,10 @@
       <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -100,7 +104,15 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form3_MassiveReplace.cs">
+    <Compile Include="InDesign.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InDesign.Designer.cs">
+      <DependentUpon>InDesign.cs</DependentUpon>
+    </Compile>
+    <Compile Include="indesign\JsData.cs" />
+
+<Compile Include="Form3_MassiveReplace.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form3_MassiveReplace.Designer.cs">
@@ -112,6 +124,7 @@
     <Compile Include="Form4_EnableDisableControls.Designer.cs">
       <DependentUpon>Form4_EnableDisableControls.cs</DependentUpon>
     </Compile>
+
     <Compile Include="MemoInGridForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -138,6 +151,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InDesign.resx">
+      <DependentUpon>InDesign.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form3_MassiveReplace.resx">
       <DependentUpon>Form3_MassiveReplace.cs</DependentUpon>
@@ -211,6 +227,21 @@
       <Project>{ad59cb29-f5db-43db-944a-66196a972e4b}</Project>
       <Name>lib.db</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JS\id - Copy.js" />
+    <Content Include="JS\id.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="InDesign">
+      <Guid>{F4B43528-68EA-4C29-8A18-6FBD8E3C24C4}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
