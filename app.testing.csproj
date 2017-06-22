@@ -87,6 +87,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawingControl.cs" />
     <Compile Include="Form2_Clipboard.cs">
       <SubType>Form</SubType>
     </Compile>
