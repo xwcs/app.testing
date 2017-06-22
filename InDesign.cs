@@ -12,6 +12,7 @@ using System.Net;
 using System.IO;
 using Newtonsoft.Json;
 using xwcs.core.evt;
+using xwcs.indesign;
 
 // Cancellare il file C:\ProgramData\Adobe\InDesign\Version 8.0\it_IT\Scripting Support\8.0\Resources for Visual Basic.tlb
 // Avviare InDesign come amministratore ricrea il file Resources for Visual Basic.tlb
@@ -39,7 +40,7 @@ namespace app.testing
         TcpThr t = null;
         AsyncService srv = null;
 
-        global::InDesign._Application app;
+        
 
         public InDesign()
         {
@@ -51,11 +52,16 @@ namespace app.testing
 
         protected override void Dispose(bool disposing)
         {
-            //t.stop();
-            if (disposing && (components != null))
+            if (disposing )
             {
-                
-                components.Dispose();
+                DevExpress.XtraSplashScreen.SplashScreenManager.ShowDefaultWaitForm("Atendere prego", "Chiusura ...");
+                // kill loggers
+                xwcs.core.manager.SLogManager.getInstance().Dispose();
+                DevExpress.XtraSplashScreen.SplashScreenManager.CloseDefaultWaitForm();
+                if(components != null)
+                {
+                    components.Dispose();
+                }                
             }
             base.Dispose(disposing);
         }
@@ -71,8 +77,7 @@ namespace app.testing
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Type type = Type.GetTypeFromProgID("InDesign.Application.CS6", true);
-            app = (global::InDesign._Application)System.Activator.CreateInstance(type, true);
+          
 
             /*System.Diagnostics.Process.Start("C:\\Program Files (x86)\\Adobe\\Adobe InDesign CS6\\InDesign.exe");
             InDesign.Application app = new InDesign.Application();*/
@@ -83,7 +88,7 @@ namespace app.testing
 
             
 
-            var doc = app.Documents.Add();
+            var doc = SIndesign.App.Documents.Add();
 
             for (var i = 0; i < 5; i++)
                 //doc.Pages.Add(idLocationOptions.idAtBeginning);
@@ -133,24 +138,24 @@ namespace app.testing
             //salva.AddEventListener("beforeInvoke", "myEventHandler");
 
             //app.DoScript(File.ReadAllText("id.js"), InDesign.idScriptLanguage.idJavascript, new object[] { });
-            
 
-            this.app.DoScript(@"#target 'indesign';
+
+            SIndesign.App.DoScript(@"#target 'indesign';
                 #targetengine 'session_CsBridge';
                 CsBridge.open({url:arguments[0]});
             ",
             global::InDesign.idScriptLanguage.idJavascript,
             new object[] { "10.17.61.98:13000" });
 
-            
-            this.app.DoScript(@"#target 'indesign';
+
+            SIndesign.App.DoScript(@"#target 'indesign';
                 #targetengine 'session_CsBridge';
                 CsBridge.addEventHandler(arguments[0], 'beforeInvoke', 'handler1');
             ",
             global::InDesign.idScriptLanguage.idJavascript,
-            new object[] { app.MenuActions[4] });
+            new object[] { SIndesign.App.MenuActions[4] });
 
-            object evt = app.MenuActions.ItemByID(260);
+            object evt = SIndesign.App.MenuActions.ItemByID(260);
 
             //object aaa = app.ScriptPreferences.Events.ItemByID(1);
 
@@ -166,6 +171,11 @@ namespace app.testing
 
 
 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            object evt = SIndesign.App.MenuActions.ItemByID(260);
         }
     }
 

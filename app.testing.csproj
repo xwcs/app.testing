@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;DEBUG_TRACE_LOG_ON</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -109,9 +109,9 @@
     <Compile Include="InDesign.Designer.cs">
       <DependentUpon>InDesign.cs</DependentUpon>
     </Compile>
+    <Compile Include="indesign\AsyncSocketServer.cs" />
     <Compile Include="indesign\JsData.cs" />
-
-<Compile Include="Form3_MassiveReplace.cs">
+    <Compile Include="Form3_MassiveReplace.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form3_MassiveReplace.Designer.cs">
@@ -123,7 +123,7 @@
     <Compile Include="Form4_EnableDisableControls.Designer.cs">
       <DependentUpon>Form4_EnableDisableControls.cs</DependentUpon>
     </Compile>
-
+    <Compile Include="indesign\SIndesign.cs" />
     <Compile Include="MemoInGridForm.cs">
       <SubType>Form</SubType>
     </Compile>
