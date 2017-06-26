@@ -30,6 +30,9 @@ namespace xwcs.indesign
 
         private bool _running = false;
 
+        readonly object _gate = new object();
+
+        private TcpListener _listener;
 
         private WeakEventSource<OnMessageEventArgs> _wes_OnMessage = null;
         public event EventHandler<OnMessageEventArgs> OnMessage
@@ -77,47 +80,44 @@ namespace xwcs.indesign
             }
         }
 
-        public bool Running
-        {
-            get
-            {
-                return _running;
-            }
-
-            set
-            {
-                _running = value;
-            }
-        }
-
-        public async void Run()
+       
+        public async void RunAsync()
         {
             if (_running) return;
+            _running = true;
 
-            TcpListener listener = new TcpListener(this.ipAddress, this.port);
-            listener.Start();
-            _logger.Debug("Service is now running on port :{0}", this.port);
-            while (!_cancelTokenSource.IsCancellationRequested && !disposedValue)
+            _listener = new TcpListener(this.ipAddress, this.port);
+            _listener.Start();
+            try
             {
-                _running = true;
-                try
+                _logger.Debug("Service is now running on port :{0}", this.port);
+                while (true)
                 {
-                    TcpClient tcpClient = await listener.AcceptTcpClientAsync();
-                    Task t = Process(tcpClient);
-                    await t;
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex.Message);
+                    try
+                    {
+                        TcpClient tcpClient = await _listener.AcceptTcpClientAsync();
+
+                        await Process(tcpClient);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error(ex.Message);
+                    }
                 }
             }
-            _running = false;
-            _logger.Debug("Service on port :{0} Stopped!", this.port);
+            finally
+            {
+                _listener.Stop();
+                _logger.Debug("Service on port :{0} Stopped!", this.port);
+            }
         }
+
+        
 
         public void Stop()
         {
             _cancelTokenSource.Cancel();
+            _listener.Stop();
         }
 
         private async Task Process(TcpClient tcpClient)

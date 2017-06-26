@@ -1,20 +1,51 @@
 ﻿#target "indesign"
 #targetengine "session_CsBridge"
 
-// this will help mantain C# <-> IND compatibility
-var CsBridge_version = '0.0.2';
+var LoggerFactory = (function(ind){
+    var _indesign = ind;
+
+    var ret = {
+        getLogger : function(path){
+            return __openLogger(path);
+        }
+    };
+
+    var __openLogger = function (path){
+       
+        return {
+            log : function(msg){
+                 var f = new File(path);
+                f.open("e");
+                f.seek(0, 2);
+                f.writeln(msg);
+                f.close();
+            }            
+        };
+    };
+
+    return ret;
+})(app);
 
 var CsBridge = (function(ind){
+    // this will help mantain C# <-> IND compatibility
+    var _CsBridge_version = '0.0.2';
+
     // private closure
     var _indesign = ind;
 
     /// @Socket
     var _tube = null;
 
+    /// @Logger
+    var _logger = null;
+
     // options
     var _opt = {
-        url : 'localhost:13000'
+        url : 'localhost:13000',
+        log : 'c:/tmp/indesign.log'
     };
+
+    var _listenersMap = {};
 
     /*
         map of elements
@@ -28,25 +59,56 @@ var CsBridge = (function(ind){
 
     // public interface
     var ret = {
+        version : function(){
+                return _CsBridge_version;
+        },
         open : function(options){
+            try{
+                __merge_options (options);
 
-           //_indesign.doScript(/*$.evalFile(*/new File("M:/Laco/Documents/Visual Studio 2015/Projects/ExcelProva/WindowsFormsApplication2/json2_src.js"));
-           //$.evalFile(new File("M:/Laco/Documents/Visual Studio 2015/Projects/ExcelProva/WindowsFormsApplication2/xprototype.js"));
+                __log("Connecting ...");     
 
-            __merge_options (options);
-            __connect (_opt.url);
+                return __connect (_opt.url);
+            }catch(e){
+                __log(e.message);
+            }
+            
         },
         
         addEventHandler : function(evtSource, evtKind){
-            evtSource.addEventListener(evtKind, __eventHandler);
+            // first check event listener presence
+            // we look for label   :   CsBridge + evtSource.Id + evtKind
+            var label = 'CsBridge_' + evtSource.id + '-' + evtKind;
+            if(_listenersMap.hasOwnProperty(label)){
+                // we have old listener already
+                // so just return
+                __log("Skipped add handler : " + label );
+                return ;
+            }
+            var listener = evtSource.addEventListener(evtKind, function(evt){
+                __eventHandler(evtKind, evt);    
+            });
+            _listenersMap[label] = listener.id;
+            __log("Added handler : " + label );
         },
 
         close : function(){
             _tube.close();
-        }    
+        },    
+
+        ping : function(){
+            __log("Sending ping ...");
+            var ret = __sendMessage('JsPing', {});
+            if(ret.status == 'ok'){
+                __log("Ping OK!");
+                return true;
+            }
+            __log("Ping FAIL!");
+            return false;
+        }
     }
 
-    var __eventHandler = function(evt){
+    var __eventHandler = function(eventKind, evt){
         var ret = __sendMessage("JsEvent", {
             bubbles : evt.bubbles,
             cancelable : evt.cancelable,
@@ -59,7 +121,8 @@ var CsBridge = (function(ind){
             timeStamp: evt.timeStamp,
             currentTargetID: evt.currentTarget.id,
             parentID: evt.parent.id,
-            targetID: evt.target.id
+            targetID: evt.target.id,
+            eventKind: eventKind
         });    
         
        __logResult(ret);
@@ -68,16 +131,17 @@ var CsBridge = (function(ind){
 
     var __logResult = function (result){
         if(result.status == 'ok'){
-                alert(JSON.stringify(result.data));
+           __log(JSON.stringify(result.data));
         }else{
-                alert('Error:' + result.msg);
+           __log('Error:' + result.msg);
         }
     }
 
     var __getMessageKind = function(kindStr){
         switch(kindStr){
             case 'JsEvent' : return 1;
-            default : return 0;
+            case 'JsPing' :
+            default : return 0; // ping
         }
     }
 
@@ -106,13 +170,17 @@ var CsBridge = (function(ind){
     }
 
     var __connect = function(url){
-        if(__connected()) return;
+        if(__connected()) {
+            __log("Already connected");
+            return true;
+        }
         _tube = new Socket;
         if (_tube.open(url)) {
+            __log("Connected.");
             return true;
         }
         // not good
-        alert("Cant connect to C# server!");
+        __log("Cant connect to C# server!");
         _tube = null;
         return false;
     }
@@ -123,33 +191,299 @@ var CsBridge = (function(ind){
         }
     }
 
-    return ret;
-})(app)
- 
-/*
-var myEventHandler = function(ev)
-{
-    alert( "You did: " + ev.target.name + " at " + ev.timeStamp );
-
-    var conn = new Socket;
-    if( conn.open( '127.0.0.1:13000' ) ) {
-        conn.write( 'GET /indesign-page/ HTTP/1.0' + "Host: 127.0.0.1\r\n" + "\n\n" );
-        reply = conn.read();// 999999);
-        conn.close();
-        alert(reply);
-    } else {
-        alert( 'Problem connecting to server' );
+    var __log = function(msg){
+        if(_logger == null){
+            _logger = LoggerFactory.getLogger(_opt.log);
+        }
+        _logger.log(msg);
     }
-};
 
-function addEventHandler(kind, obj){
-    alert(kind);
-    obj.addEventListener(kind, myEventHandler);
-} 
+    return ret;
+})(app);
+ 
 
 
+/* EGAF CODE */
+var FileManager = (function(ind){
+    var _indesign = ind;
 
-*/
+    const TEMPLATE_FILE_NAME = 'template.indt',
+          SCRIPT_NAME = 'Apri RTF';
+    var err = 0,
+        errMsg = '',
+        myStory,
+        convertPageBreaks,
+        convertTablesTo,
+        importEndnotes,
+        importFootnotes,
+        importIndex,
+        importTOC,
+        importUnusedStyles,
+        preserveGraphics,
+        preserveLocalOverrides,
+        preserveTrackChanges,
+        removeFormatting,
+        resolveParagraphStyleClash,
+        resolveCharacterStyleClash,
+        useTypographersQuotes,
+        indtPath = pathOnly(getScriptPath())+ TEMPLATE_FILE_NAME;
+
+    var ret = {
+        open : function(path){
+            var fPath = path || "";
+            // Ask user to open the RTF
+            if(_indesign.wordRTFImportPreferences.useTypographersQuotes = true){ 
+                _indesign.wordRTFImportPreferences.useTypographersQuotes = false 
+            }else{ 
+                _indesign.wordRTFImportPreferences.useTypographersQuotes = true 
+            } 
+
+            var rtfFile = null;
+
+            if( !(rtfFile = File(fPath)).exists )
+            {
+                rtfFile = File.openDialog('Apri RTF','Rich Text Format:*.*',false); 
+            }
+
+            _indesign.scriptPreferences.userInteractionLevel = UserInteractionLevels.NEVER_INTERACT;
+            if(rtfFile){
+                try{
+                    init(indtPath);
+                    if (myStory){
+		
+                        $.writeln(rtfFile.fsName);
+			
+                        setAppPreferences();
+			
+                        // place the RTF
+                        myStory.insertionPoints.item(0).place(rtfFile.fsName,false);
+			
+                        // save the RTF path into story label
+                        myStory.label = rtfFile.fsName;
+			
+                        //restoreAppPreferences();
+			
+                    }else{
+                        err = -43;
+                        errMsg = 'Il template \r"'+indtPath+'"\r non esiste o non ha frame nella prima pagina.';
+                    }
+                }catch(e){
+                    err = e.number;
+                    errMsg = e.description;
+                }finally{
+                    if(errMsg != '')alert (errMsg, SCRIPT_NAME);
+                }
+            }
+            _indesign.scriptPreferences.userInteractionLevel = UserInteractionLevels.INTERACT_WITH_ALL;
+        }
+    }
+
+    function init(indtPath){
+        var myDocument,
+            myPage,
+            myTextFrame,
+            indtFile = new File(indtPath);
+        if(indtFile.exists){
+            myDocument = _indesign.open(indtFile);
+            myPage = myDocument.pages.item(0);
+            if(myPage.textFrames.length>0){
+                myTextFrame = myPage.textFrames.item(0);
+                myStory = myTextFrame.parentStory;
+            }
+        }
+    }
+
+    function setAppPreferences(){
+        // save current settings
+        convertPageBreaks = _indesign.wordRTFImportPreferences.convertPageBreaks;
+        convertTablesTo = _indesign.wordRTFImportPreferences.convertTablesTo;
+        importEndnotes = _indesign.wordRTFImportPreferences.importEndnotes;
+        importFootnotes = _indesign.wordRTFImportPreferences.importFootnotes;
+        importIndex = _indesign.wordRTFImportPreferences.importIndex;
+        importTOC = _indesign.wordRTFImportPreferences.importTOC;
+        importUnusedStyles = _indesign.wordRTFImportPreferences.importUnusedStyles;
+        preserveGraphics = _indesign.wordRTFImportPreferences.preserveGraphics;
+        preserveLocalOverrides = _indesign.wordRTFImportPreferences.preserveLocalOverrides;
+        preserveTrackChanges = _indesign.wordRTFImportPreferences.preserveTrackChanges;
+        removeFormatting = _indesign.wordRTFImportPreferences.removeFormatting;
+        resolveParagraphStyleClash = _indesign.wordRTFImportPreferences.resolveParagraphStyleClash;
+        resolveCharacterStyleClash = _indesign.wordRTFImportPreferences.resolveCharacterStyleClash;
+        useTypographersQuotes = _indesign.wordRTFImportPreferences.useTypographersQuotes;
+        // set predefined settings for the script
+        _indesign.wordRTFImportPreferences.convertPageBreaks = ConvertPageBreaks.NONE;
+        _indesign.wordRTFImportPreferences.convertTablesTo = ConvertTablesOptions.UNFORMATTED_TABBED_TEXT;
+        _indesign.wordRTFImportPreferences.importEndnotes = false;
+        _indesign.wordRTFImportPreferences.importFootnotes = false;
+        _indesign.wordRTFImportPreferences.importIndex = true;
+        _indesign.wordRTFImportPreferences.importTOC = true;
+        _indesign.wordRTFImportPreferences.importUnusedStyles = true;
+        _indesign.wordRTFImportPreferences.preserveGraphics = true;
+        _indesign.wordRTFImportPreferences.preserveLocalOverrides = true;
+        _indesign.wordRTFImportPreferences.preserveTrackChanges = true;
+        _indesign.wordRTFImportPreferences.removeFormatting = false;
+        _indesign.wordRTFImportPreferences.resolveParagraphStyleClash = ResolveStyleClash.RESOLVE_CLASH_AUTO_RENAME;
+        _indesign.wordRTFImportPreferences.resolveCharacterStyleClash = ResolveStyleClash.RESOLVE_CLASH_AUTO_RENAME;
+        _indesign.wordRTFImportPreferences.useTypographersQuotes = true;
+    }
+
+    function restoreAppPreferences(){
+        _indesign.wordRTFImportPreferences.convertPageBreaks = convertPageBreaks;
+        _indesign.wordRTFImportPreferences.convertTablesTo = convertTablesTo;
+        _indesign.wordRTFImportPreferences.importEndnotes = importEndnotes;
+        _indesign.wordRTFImportPreferences.importFootnotes = importFootnotes;
+        _indesign.wordRTFImportPreferences.importIndex = importIndex;
+        _indesign.wordRTFImportPreferences.importTOC = importTOC;
+        _indesign.wordRTFImportPreferences.importUnusedStyles = importUnusedStyles;
+        _indesign.wordRTFImportPreferences.preserveGraphics = preserveGraphics;
+        _indesign.wordRTFImportPreferences.preserveLocalOverrides = preserveLocalOverrides;
+        _indesign.wordRTFImportPreferences.preserveTrackChanges = preserveTrackChanges;
+        _indesign.wordRTFImportPreferences.removeFormatting = removeFormatting;
+        _indesign.wordRTFImportPreferences.resolveParagraphStyleClash = resolveParagraphStyleClash;
+        _indesign.wordRTFImportPreferences.resolveCharacterStyleClash = resolveCharacterStyleClash;
+        _indesign.wordRTFImportPreferences.useTypographersQuotes = useTypographersQuotes;
+    }
+
+    function getScriptPath() {
+        // returns the path to the active script, even when running ESTK
+        try { 
+            return _indesign.activeScript; 
+        } catch(e) { 
+            return File(e.fileName); 
+        }
+    }
+
+    function pathOnly (inString)  {
+        var s = inString + "";
+        var a = s.split ("/", 10000);
+        if(a.length > 0) a.pop();
+        return (a.join ("/") + "/");
+    }
+    
+    return ret;
+})(app);
+
+
+// activate new menus
+(function(ind)
+    // -------------------------------------
+    // Install and/or update the menu/submenu and connect
+    // the corresponding menu actions if script files are available
+{
+        var _indesign = ind;
+    
+    // Settings and constants
+    // ---
+    var MENU_NAME = "Egaf",
+        FEATURES = [
+            { caption: "Apri RTF...", fileName: "Scripts%20Panel/file.open.rtf.jsx", subName: "" },
+            { caption: "Salva RTF", fileName: "Scripts%20Panel/file.save.rtf.jsx", subName: "" },
+            { caption: "Salva RTF nuovo documento", fileName: "Scripts%20Panel/file.save.rtf.new.doc.jsx", subName: "" },
+			{ separator: true, subName: "" },
+			{ caption: "Inserisci tag figure/categorie...", fileName: "Scripts%20Panel/edit.insert.tags.figcat.js", subName: "" }
+        ],
+        LO_END = LocationOptions.atEnd,
+        INDESIGN_ROOT_MENU = _indesign.menus.item( '$ID/Main' ),
+        FEATURE_LOCATION_PATH = (function()
+        {
+            var f;
+            try{ f=_indesign.activeScript; }
+            catch(_){ f=File(_.fileName); }
+            return f.parent.parent + '/';
+        })();
+ 
+    // (Re)set the actions
+    // Note: checks also whether script files are available
+    // ---
+    var    t, f,
+        i = FEATURES.length;
+    while( i-- )
+    {
+        t = FEATURES[i];
+        if( t.separator ) continue;
+ 
+        if( (f=File(FEATURE_LOCATION_PATH + t.fileName)).exists )
+        {
+            // The script file exists => create the corresponding action
+            // and directly attach the event listener to the file
+            // (no need to use _indesign.doScript(...) here)
+            // ---
+            (t.action = _indesign.scriptMenuActions.add( t.caption )).
+                addEventListener('onInvoke', f);
+        }
+        else
+        {
+            // The script file does not exist => remove that feature
+            // ---
+            FEATURES.splice(i,1);
+        }
+    }
+ 
+    // ---
+    // Create/reset the custom menu container *if necessary*
+    // Note:  menus/submenus are application-persistent
+    // ---
+    var    mnu = INDESIGN_ROOT_MENU.submenus.itemByName( MENU_NAME );
+    if( !mnu.isValid )
+    {
+        // Our custom menu hasn't been created yet
+        // ---
+        if( !FEATURES.length ) return;
+        mnu = INDESIGN_ROOT_MENU.submenus.add(
+            MENU_NAME,
+            LocationOptions.after,
+            INDESIGN_ROOT_MENU.submenus.item( '$ID/&Window' )
+            );
+    }
+    else
+    {
+        // Our custom menu already exists, but we must clear
+        // any sub element in order to rebuild a fresh structure
+        // ---
+        mnu.menuElements.everyItem().remove();
+ 
+        // If FEATURES is empty, remove the menu itself
+        // ---
+        if( !FEATURES.length ){ mnu.remove(); return; }
+    }
+ 
+    // ---
+    // Now, let's fill mnu with respect to FEATURES' order
+    // (Possible submenus are specified in .subName and created on the fly)
+    // ---
+    var s,
+        n = FEATURES.length,
+        subs = {},
+        sub = null;
+    for( i=0 ; i < n ; ++i )
+    {
+        t = FEATURES[i];
+ 
+        // Target the desired submenu
+        // ---
+        sub = (s=t.subName) ?
+            ( subs[s] || (subs[s]=mnu.submenus.add( s, LO_END )) ) :
+            mnu;
+ 
+        // Connect the related action OR create a separator
+        // ---
+        if( t.separator )
+            sub.menuSeparators.add( LO_END);
+        else
+            sub.menuItems.add( t.action, LO_END );
+    }
+})(app);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

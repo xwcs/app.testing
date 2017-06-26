@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CustomMarshalers" />
     <Reference Include="DevExpress.Data.v17.1, Version=17.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Office.v17.1.Core, Version=17.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
     <Reference Include="DevExpress.Pdf.v17.1.Core, Version=17.1.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
@@ -111,6 +112,7 @@
       <DependentUpon>InDesign.cs</DependentUpon>
     </Compile>
     <Compile Include="indesign\AsyncSocketServer.cs" />
+    <Compile Include="indesign\DispatchUtility.cs" />
     <Compile Include="indesign\JsData.cs" />
     <Compile Include="Form3_MassiveReplace.cs">
       <SubType>Form</SubType>
@@ -124,6 +126,7 @@
     <Compile Include="Form4_EnableDisableControls.Designer.cs">
       <DependentUpon>Form4_EnableDisableControls.cs</DependentUpon>
     </Compile>
+    <Compile Include="indesign\JsEventBindable.cs" />
     <Compile Include="indesign\SIndesign.cs" />
     <Compile Include="MemoInGridForm.cs">
       <SubType>Form</SubType>
@@ -180,6 +183,8 @@
     <EmbeddedResource Include="TreeViewForm.resx">
       <DependentUpon>TreeViewForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="JS\MakeLinks.bat" />
+    <None Include="JS\template.indt" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -229,7 +234,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="JS\id - Copy.js" />
+    <Content Include="JS\file.open.rtf.jsx" />
+    <Content Include="JS\file.save.rtf.jsx" />
+    <Content Include="JS\file.save.rtf.new.doc.jsx" />
     <Content Include="JS\id.js" />
   </ItemGroup>
   <ItemGroup>

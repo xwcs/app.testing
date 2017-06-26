@@ -11,8 +11,9 @@ namespace xwcs.indesign
     {
         public enum DataKind
         {
-            Unknown = 0,
-            Event = 1
+            Ping = 0,       // ping
+            Event = 1,      // js event notify dono later on C#
+            Action = 2      // sync code execution, routin must not touch InDesign DOM!!!!!
         }
 
 
@@ -23,17 +24,25 @@ namespace xwcs.indesign
         }
 
         [JsonConverter(typeof(core.json.JsonSubtypes), "DataKindType")]
-        [core.json.JsonSubtypes.KnownSubType(typeof(JsUnknown), DataKind.Unknown)]
+        [core.json.JsonSubtypes.KnownSubType(typeof(JsPing), DataKind.Ping)]
         [core.json.JsonSubtypes.KnownSubType(typeof(JsEvent), DataKind.Event)]
+        [core.json.JsonSubtypes.KnownSubType(typeof(JsAction), DataKind.Action)]
         public class BaseData
         {
             public DataKind DataKindType { get; set; }
         }
 
-        public class JsUnknown : BaseData
+        public class JsPing : BaseData
         {
 
         }
+
+        public class JsAction : BaseData
+        {
+            public string what { get; set; }
+            public object[] args { get; set; }
+        }
+
         /*
             bubbles : evt.bubbles,
             cancelable : evt.cancelable,
@@ -46,7 +55,9 @@ namespace xwcs.indesign
             timeStamp: evt.timeStamp
             currentTargetID: evt.currentTarget.id,
             parentID: evt.parent.id,
-            targetID: evt.target.id
+            targetID: evt.target.id,
+            eventKind: eventKind
+
          */
         public class JsEvent : BaseData
         {
@@ -62,6 +73,7 @@ namespace xwcs.indesign
             public int currentTargetID { get; set; }
             public int parentID { get; set; }
             public int targetID { get; set; }
+            public string eventKind { get; set; }
         }
     }
 }
