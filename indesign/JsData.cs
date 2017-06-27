@@ -13,7 +13,8 @@ namespace xwcs.indesign
         {
             Ping = 0,       // ping
             Event = 1,      // js event notify dono later on C#
-            Action = 2      // sync code execution, routin must not touch InDesign DOM!!!!!
+            Action = 2,      // sync code execution, routin must not touch InDesign DOM!!!!!
+            TaskResult = 3   // result of soem async task
         }
 
 
@@ -27,6 +28,7 @@ namespace xwcs.indesign
         [core.json.JsonSubtypes.KnownSubType(typeof(JsPing), DataKind.Ping)]
         [core.json.JsonSubtypes.KnownSubType(typeof(JsEvent), DataKind.Event)]
         [core.json.JsonSubtypes.KnownSubType(typeof(JsAction), DataKind.Action)]
+        [core.json.JsonSubtypes.KnownSubType(typeof(JsTaskResult), DataKind.TaskResult)]
         public class BaseData
         {
             public DataKind DataKindType { get; set; }
@@ -74,6 +76,16 @@ namespace xwcs.indesign
             public int parentID { get; set; }
             public int targetID { get; set; }
             public string eventKind { get; set; }
+        }
+
+        /*
+         * taskId : what.taskId,
+            status : ret
+         */
+        public class JsTaskResult : BaseData
+        {
+            public int taskId { get; set; }
+            public bool status { get; set; }
         }
     }
 }

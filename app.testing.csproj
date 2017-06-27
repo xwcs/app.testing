@@ -237,6 +237,7 @@
     <Content Include="JS\file.open.rtf.jsx" />
     <Content Include="JS\file.save.rtf.jsx" />
     <Content Include="JS\file.save.rtf.new.doc.jsx" />
+    <Content Include="JS\id - Copy.js" />
     <Content Include="JS\id.js" />
   </ItemGroup>
   <ItemGroup>

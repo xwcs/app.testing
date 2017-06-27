@@ -53,6 +53,8 @@ namespace app.testing
                 DevExpress.XtraSplashScreen.SplashScreenManager.ShowDefaultWaitForm("Atendere prego", "Chiusura ...");
                 // kill loggers
                 xwcs.core.manager.SLogManager.getInstance().Dispose();
+                // clena indesign 
+                SIndesign.getInstance().Dispose();
                 DevExpress.XtraSplashScreen.SplashScreenManager.CloseDefaultWaitForm();
                 if(components != null)
                 {
