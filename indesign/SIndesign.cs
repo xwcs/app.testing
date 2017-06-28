@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using InDesign;
+//using InDesign;
 
 namespace xwcs.indesign
 {
@@ -16,7 +16,7 @@ namespace xwcs.indesign
 
 
         // indesign
-        private InDesign._Application _app = null;
+        //private InDesign._Application _app = null;
 
         //socket server
         private AsyncSocketService _server = null;
@@ -39,6 +39,7 @@ namespace xwcs.indesign
             return instance;
         }
 
+		
         public static _Application App
         {
             get
