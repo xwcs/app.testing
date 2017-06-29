@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -32,16 +33,18 @@ namespace app.testing
 		{
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 
-			//_gbs.DataSource = ctx.iter.Take(100).ToList();
+			//ctx.iter.Take(100).ToList();
+			//_gbs.DataSource = ctx.iter.Local.ToBindingList();
 			//_gbs.AttachToGrid(gridControl1);
+			
+			
 			
 			List<lib.db.doc.niterdoc.iter> tmp = ctx.iter.Take(100).ToList();
 
 			_dataTable = new DataTable("Table1");
 			_dataTable.Columns.Add("id", typeof(int));
 			_dataTable.Columns.Add("OTA_edit", typeof(string));
-			_dataTable.Columns.Add("oggetto_uff_edit", typeof(string));
-			
+			_dataTable.Columns.Add("oggetto_uff_edit", typeof(string));			
 
 			foreach (lib.db.doc.niterdoc.iter iter in tmp)
 			{
@@ -51,12 +54,10 @@ namespace app.testing
 				row["oggetto_uff_edit"] = iter.oggetto_uff_edit;
 				_dataTable.Rows.Add(row);
 			}
-
-
 			_gbs.DataType = typeof(lib.db.doc.niterdoc.iter);
 			_gbs.DataSource = _dataTable;
 			_gbs.AttachToGrid(gridControl1);
-
+			
 
 			_gbs.ListChanged += _gbs_ListChanged;
 		}
@@ -69,7 +70,7 @@ namespace app.testing
 			{
 				object obj = pd.GetValue(_gbs.Current);
 				Console.WriteLine("Value : " + obj.ToString());
-				(_gbs.Current as DataRowView).Row[2] = "AAA";
+				//(_gbs.Current as DataRowView).Row[2] = "AAA";
 			}
 		}
 
