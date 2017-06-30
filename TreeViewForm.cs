@@ -11,51 +11,48 @@ using DevExpress.XtraEditors;
 using System.Reflection;
 using xwcs.core.manager;
 using xwcs.core;
+using xwcs.core.db.binding;
+using System.Data.Entity;
+using xwcs.core.evt;
 
 namespace app.testing
 {
     public partial class TreeViewForm : DevExpress.XtraEditors.XtraForm
     {
-        BindingSource bs;
-        lib.db.doc.niterdoc.NiterDocEntities ctx;
-
-        bool _starting = false;
+		private GridBindingSource _gbs = new GridBindingSource();
+		lib.db.doc.niterdoc.NiterDocEntities ctx;
 
         public TreeViewForm()
         {
-            xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
+			// invocation target for events
+			SEventProxy.InvokeDelegate = this;
+
+			xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
 
             InitializeComponent();
-
-            //DataRow myRow;
 
 
             ctx = new lib.db.doc.niterdoc.NiterDocEntities();
             ctx.Database.Log = Console.WriteLine;
-            //DataTable dt = ctx.edit_classificazioni.AsEnumerable().ToDataTable();
+			ctx.classificazioni.Take(100).ToList();
+			_gbs.DataSource = ctx.classificazioni.Local.ToBindingList();
+			treeList1.KeyFieldName = "id";
+			treeList1.ParentFieldName = "parent_id";
+			_gbs.AttachToTree(treeList1);
 
-            bs = new BindingSource();
+			_gbs.CurrentItemChanged += Bs_CurrentItemChanged;
+			_gbs.ListChanged += _gbs_ListChanged;
+			
+		}
 
-            bs.CurrentItemChanged += Bs_CurrentItemChanged;
+		private void _gbs_ListChanged(object sender, ListChangedEventArgs e)
+		{
+			Console.WriteLine("_gbs_ListChanged");
+		}
 
-            _starting = true;
-
-            treeList1.ParentFieldName = "parent_id";
-            treeList1.OptionsBehavior.AutoPopulateColumns = true;
-            treeList1.DataSource = bs;
-           // bs.DataSource = dt;
-            
-            treeList1.PopulateColumns();
-
-            _starting = false;
-        }
-
-        private void Bs_CurrentItemChanged(object sender, EventArgs e)
+		private void Bs_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (_starting) return;
-            //lib.db.doc.niterdoc.edit_classificazioni cl = ctx.edit_classificazioni.Local.Where(c => c.id == (bs.Current as DataRowView).Row.Field<int>("id")).FirstOrDefault();
-
-            //cl.SetItemFromRow((bs.Current as DataRowView).Row);
+			Console.WriteLine("Bs_CurrentItemChanged");
         }
 
         /// <summary>
