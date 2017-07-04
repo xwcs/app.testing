@@ -21,30 +21,55 @@ namespace app.testing
     {
 		private GridBindingSource _gbs = new GridBindingSource();
 		lib.db.doc.niterdoc.NiterDocEntities ctx;
+		private DataTable _dataTable;
 
-        public TreeViewForm()
+		public TreeViewForm()
         {
-			// invocation target for events
 			SEventProxy.InvokeDelegate = this;
 
 			xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
-
             InitializeComponent();
 
-
+			/*
+			//FROM bindinglist
             ctx = new lib.db.doc.niterdoc.NiterDocEntities();
             ctx.Database.Log = Console.WriteLine;
 			ctx.classificazioni.Take(100).ToList();
+
+			//_gbs.HandleCustomColumnDisplayText = true;
 			_gbs.DataSource = ctx.classificazioni.Local.ToBindingList();
 			treeList1.KeyFieldName = "id";
 			treeList1.ParentFieldName = "parent_id";
 			_gbs.AttachToTree(treeList1);
-
 			_gbs.CurrentItemChanged += Bs_CurrentItemChanged;
 			_gbs.ListChanged += _gbs_ListChanged;
-			
-		}
+			*/
 
+
+			//From DataTable
+			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
+			List<lib.db.doc.niterdoc.classificazioni> tmp = ctx.classificazioni.Take(100).ToList();
+			_dataTable = new DataTable("Table1");
+			_dataTable.Columns.Add("id", typeof(int));
+			_dataTable.Columns.Add("parent_id", typeof(int));
+			_dataTable.Columns.Add("descrizione", typeof(string));
+			foreach (lib.db.doc.niterdoc.classificazioni cl in tmp)
+			{
+				DataRow row = _dataTable.NewRow();
+				row["id"] = cl.id;
+				row["parent_id"] = (cl.parent_id == null) ? 0 : cl.parent_id;
+				row["descrizione"] = cl.descrizione;
+				_dataTable.Rows.Add(row);
+			}
+
+			_gbs.DataType = typeof(lib.db.doc.niterdoc.classificazioni);
+			_gbs.DataSource = _dataTable;
+			_gbs.AttachToTree(treeList1);
+			treeList1.KeyFieldName = "id";
+			treeList1.ParentFieldName = "parent_id";
+			_gbs.CurrentItemChanged += Bs_CurrentItemChanged;
+			_gbs.ListChanged += _gbs_ListChanged;
+		}
 		private void _gbs_ListChanged(object sender, ListChangedEventArgs e)
 		{
 			Console.WriteLine("_gbs_ListChanged");
@@ -78,7 +103,7 @@ namespace app.testing
         {
             ctx.SaveChanges();
         }
-    }
+	}
 
 
 

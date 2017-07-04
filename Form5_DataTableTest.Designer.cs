@@ -7,19 +7,6 @@
 		/// </summary>
 		private System.ComponentModel.IContainer components = null;
 
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && (components != null))
-			{
-				components.Dispose();
-			}
-			base.Dispose(disposing);
-		}
-
 		#region Windows Form Designer generated code
 
 		/// <summary>
@@ -33,14 +20,14 @@
 			this.textBox3 = new System.Windows.Forms.TextBox();
 			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
+			this.memoEdit1 = new DevExpress.XtraEditors.MemoEdit();
 			this.gridControl1 = new DevExpress.XtraGrid.GridControl();
 			this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
-			this.memoEdit1 = new DevExpress.XtraEditors.MemoEdit();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
-			((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel1
@@ -48,8 +35,8 @@
 			this.tableLayoutPanel1.ColumnCount = 1;
 			this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
 			this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-			this.tableLayoutPanel1.Controls.Add(this.gridControl1, 0, 0);
 			this.tableLayoutPanel1.Controls.Add(this.memoEdit1, 0, 2);
+			this.tableLayoutPanel1.Controls.Add(this.gridControl1, 0, 0);
 			this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -95,22 +82,6 @@
 			this.textBox1.TabIndex = 1;
 			this.textBox1.Text = "2";
 			// 
-			// gridControl1
-			// 
-			this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.gridControl1.Location = new System.Drawing.Point(3, 3);
-			this.gridControl1.MainView = this.gridView1;
-			this.gridControl1.Name = "gridControl1";
-			this.gridControl1.Size = new System.Drawing.Size(792, 379);
-			this.gridControl1.TabIndex = 1;
-			this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
-            this.gridView1});
-			// 
-			// gridView1
-			// 
-			this.gridView1.GridControl = this.gridControl1;
-			this.gridView1.Name = "gridView1";
-			// 
 			// memoEdit1
 			// 
 			this.memoEdit1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -118,6 +89,22 @@
 			this.memoEdit1.Name = "memoEdit1";
 			this.memoEdit1.Size = new System.Drawing.Size(792, 111);
 			this.memoEdit1.TabIndex = 2;
+			// 
+			// gridControl1
+			// 
+			this.gridControl1.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.gridControl1.Location = new System.Drawing.Point(3, 3);
+			this.gridControl1.MainView = this.gridView1;
+			this.gridControl1.Name = "gridControl1";
+			this.gridControl1.Size = new System.Drawing.Size(792, 379);
+			this.gridControl1.TabIndex = 3;
+			this.gridControl1.ViewCollection.AddRange(new DevExpress.XtraGrid.Views.Base.BaseView[] {
+            this.gridView1});
+			// 
+			// gridView1
+			// 
+			this.gridView1.GridControl = this.gridControl1;
+			this.gridView1.Name = "gridView1";
 			// 
 			// Form5_DataTableTest
 			// 
@@ -130,9 +117,9 @@
 			this.tableLayoutPanel1.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
+			((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridControl1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
-			((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -141,11 +128,11 @@
 
 		private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
 		private System.Windows.Forms.Panel panel1;
-		private DevExpress.XtraGrid.GridControl gridControl1;
-		private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
 		private System.Windows.Forms.TextBox textBox3;
 		private System.Windows.Forms.TextBox textBox2;
 		private System.Windows.Forms.TextBox textBox1;
 		private DevExpress.XtraEditors.MemoEdit memoEdit1;
+		private DevExpress.XtraGrid.GridControl gridControl1;
+		private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
 	}
 }

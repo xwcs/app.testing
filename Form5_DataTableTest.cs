@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using xwcs.core.db.binding;
 using xwcs.core.evt;
+using xwcs.core.manager;
 
 namespace app.testing
 {
@@ -21,23 +22,42 @@ namespace app.testing
 		private GridBindingSource _gbs = new GridBindingSource();
 		public Form5_DataTableTest()
 		{
-			InitializeComponent();
-			
-			xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
 			SEventProxy.InvokeDelegate = this;
 
+			xwcs.core.user.SecurityContext.getInstance().setUserProvider(new lib.core.user.BackOfficeUserProvider());
+
+			InitializeComponent();
+			
+
 			initDataTable();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+
+
+			if (disposing)
+			{
+				// kill loggers
+				SLogManager.getInstance().Dispose();
+
+				if (components != null) components.Dispose();
+
+			}
+			base.Dispose(disposing);
 		}
 
 		private void initDataTable()
 		{
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 
-			//ctx.iter.Take(100).ToList();
-			//_gbs.DataSource = ctx.iter.Local.ToBindingList();
-			//_gbs.AttachToGrid(gridControl1);
-			
-			
+			/*
+			ctx.iter.Take(100).ToList();
+			_gbs.DataSource = ctx.iter.Local.ToBindingList();
+			_gbs.AttachToGrid(gridControl1);
+			_gbs.ListChanged += _gbs_ListChanged;
+			*/
+
 			
 			List<lib.db.doc.niterdoc.iter> tmp = ctx.iter.Take(100).ToList();
 
@@ -54,17 +74,15 @@ namespace app.testing
 				row["oggetto_uff_edit"] = iter.oggetto_uff_edit;
 				_dataTable.Rows.Add(row);
 			}
-			_gbs.DataType = typeof(lib.db.doc.niterdoc.iter);
 			_gbs.DataSource = _dataTable;
-			_gbs.AttachToGrid(gridControl1);
-			
-
+			_gbs.AttachToGrid(gridControl1);	
 			_gbs.ListChanged += _gbs_ListChanged;
+			
 		}
 
 		private void _gbs_ListChanged(object sender, ListChangedEventArgs e)
 		{
-			Console.WriteLine("List changed");
+			Console.WriteLine("_gbs_ListChanged");
 			PropertyDescriptor pd = e.PropertyDescriptor;
 			if (pd != null)
 			{
