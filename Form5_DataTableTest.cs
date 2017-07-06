@@ -18,7 +18,7 @@ namespace app.testing
 	{
 		private lib.db.doc.niterdoc.NiterDocEntities ctx;
 		private DataTable _dataTable;
-		private BindingSource _bs = new BindingSource();
+		//private BindingSource _bs = new BindingSource();
 		private GridBindingSource _gbs = new GridBindingSource();
 		public Form5_DataTableTest()
 		{
@@ -51,14 +51,14 @@ namespace app.testing
 		{
 			ctx = new lib.db.doc.niterdoc.NiterDocEntities();
 
-			/*
+			
 			ctx.iter.Take(100).ToList();
 			_gbs.DataSource = ctx.iter.Local.ToBindingList();
 			_gbs.AttachToGrid(gridControl1);
 			_gbs.ListChanged += _gbs_ListChanged;
-			*/
-
 			
+
+			/*
 			List<lib.db.doc.niterdoc.iter> tmp = ctx.iter.Take(100).ToList();
 
 			_dataTable = new DataTable("Table1");
@@ -74,10 +74,17 @@ namespace app.testing
 				row["oggetto_uff_edit"] = iter.oggetto_uff_edit;
 				_dataTable.Rows.Add(row);
 			}
+			_gbs.DataType = typeof(lib.db.doc.niterdoc.iter);
 			_gbs.DataSource = _dataTable;
 			_gbs.AttachToGrid(gridControl1);	
 			_gbs.ListChanged += _gbs_ListChanged;
-			
+			_gbs.CurrentItemChanged += _gbs_CurrentItemChanged;
+			*/
+		}
+
+		private void _gbs_CurrentItemChanged(object sender, EventArgs e)
+		{
+			Console.WriteLine("_gbs_CurrentItemChanged");
 		}
 
 		private void _gbs_ListChanged(object sender, ListChangedEventArgs e)
