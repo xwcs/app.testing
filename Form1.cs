@@ -34,7 +34,7 @@ namespace app.testing
 
 			if (gridView1.FocusedRowHandle >= 0) bookmark = gridView1.GetRowCellDisplayText(gridView1.FocusedRowHandle, "id");
 
-			gridControl1.DataSource = ctx.edizione.Where(x => x.nrecord == 30615).ToList().OrderBy(x => x.ordine);
+			gridControl1.DataSource = ctx.labels.Where(x => x.nrecord == 30615).ToList().OrderBy(x => x.ordine);
 
 			if (bookmark == "") return;
 
@@ -52,8 +52,8 @@ namespace app.testing
 
 			if (iRowSelect >= 0)
 			{
-				lib.db.doc.niterdoc.edizione actualData = gridView1.GetRow(iRowSelect) as lib.db.doc.niterdoc.edizione;
-				lib.db.doc.niterdoc.edizione beforeData = gridView1.GetRow(iRowSelect - 1) as lib.db.doc.niterdoc.edizione;
+				lib.db.doc.niterdoc.labels actualData = gridView1.GetRow(iRowSelect) as lib.db.doc.niterdoc.labels;
+				lib.db.doc.niterdoc.labels beforeData = gridView1.GetRow(iRowSelect - 1) as lib.db.doc.niterdoc.labels;
 
 				if ((beforeData == null) || (actualData.ordine == beforeData.ordine)) return;
 
@@ -69,8 +69,8 @@ namespace app.testing
 
 			if (iRowSelect >= 0)
 			{
-				lib.db.doc.niterdoc.edizione actualData = gridView1.GetRow(iRowSelect) as lib.db.doc.niterdoc.edizione;
-				lib.db.doc.niterdoc.edizione nextData = gridView1.GetRow(iRowSelect + 1) as lib.db.doc.niterdoc.edizione;
+				lib.db.doc.niterdoc.labels actualData = gridView1.GetRow(iRowSelect) as lib.db.doc.niterdoc.labels;
+				lib.db.doc.niterdoc.labels nextData = gridView1.GetRow(iRowSelect + 1) as lib.db.doc.niterdoc.labels;
 
 				if ((nextData == null) || (actualData.ordine == nextData.ordine)) return;
 
