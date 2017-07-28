@@ -23,6 +23,7 @@
 			this.memoEdit1 = new DevExpress.XtraEditors.MemoEdit();
 			this.gridControl1 = new DevExpress.XtraGrid.GridControl();
 			this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
+			this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
 			this.tableLayoutPanel1.SuspendLayout();
 			this.panel1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.memoEdit1.Properties)).BeginInit();
@@ -49,6 +50,7 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.simpleButton1);
 			this.panel1.Controls.Add(this.textBox3);
 			this.panel1.Controls.Add(this.textBox2);
 			this.panel1.Controls.Add(this.textBox1);
@@ -106,6 +108,15 @@
 			this.gridView1.GridControl = this.gridControl1;
 			this.gridView1.Name = "gridView1";
 			// 
+			// simpleButton1
+			// 
+			this.simpleButton1.Location = new System.Drawing.Point(265, 2);
+			this.simpleButton1.Name = "simpleButton1";
+			this.simpleButton1.Size = new System.Drawing.Size(75, 23);
+			this.simpleButton1.TabIndex = 4;
+			this.simpleButton1.Text = "simpleButton1";
+			this.simpleButton1.Click += new System.EventHandler(this.simpleButton1_Click);
+			// 
 			// Form5_DataTableTest
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -134,5 +145,6 @@
 		private DevExpress.XtraEditors.MemoEdit memoEdit1;
 		private DevExpress.XtraGrid.GridControl gridControl1;
 		private DevExpress.XtraGrid.Views.Grid.GridView gridView1;
+		private DevExpress.XtraEditors.SimpleButton simpleButton1;
 	}
 }

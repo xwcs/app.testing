@@ -99,5 +99,57 @@ namespace app.testing
 			}
 		}
 
+		private void simpleButton1_Click(object sender, EventArgs e)
+		{
+			xwcs.core.net.ExtraWayHTTPConnector _xwhttp = new xwcs.core.net.ExtraWayHTTPConnector();
+			lib.db.doc.niterdoc.NiterDocEntities _db = new lib.db.doc.niterdoc.NiterDocEntities();
+
+			try
+			{
+				object[] args = new object[3];
+				args[0] = true;
+				args[1] = "C:\\7\\235.rtf";
+				args[2] = "{ \"id_iter\" : 126224 }"; 
+
+				if (args.Length != 3)
+				{
+					throw new ArgumentException("wrong params for save");
+				}
+
+				bool isMain = bool.Parse(args[0].ToString());
+				// first send media in xw
+				string path = args[1].ToString();
+				dynamic meta = Newtonsoft.Json.JsonConvert.DeserializeObject(args[2].ToString());
+
+				string pattern = @"^(?:/([A-Za-z])/)(.*?)$";
+				string newPath = System.Text.RegularExpressions.Regex.Replace(path, pattern, "$1:/$2");
+
+				string newId = _xwhttp.UploadAttachment(newPath);
+				if (newId != "")
+				{
+					// delete file
+					// System.IO.File.Delete(newPath);
+					int iterId = meta.id_iter;
+
+					lib.db.doc.niterdoc.iter it = _db.iter.AsNoTracking().Where(i => i.id == iterId).FirstOrDefault();
+					if (ReferenceEquals(it, null))
+					{
+						throw new ApplicationException("Iter not found");
+					}
+					_db.AttachNewMedia(it, newId, isMain);
+
+					// notify
+					//_wes_OnIterChaged?.Raise(this, new IterDocumentChangedEnventArgs() { iter = it });
+
+					//return new { success = true };
+				}
+
+				//throw new ApplicationException("Problem with saving in XW!");
+			}
+			catch (Exception ex)
+			{
+				return;
+			}
+		}
 	}
 }
