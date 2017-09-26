@@ -20,11 +20,12 @@ namespace app.testing
 			//Application.Run(new lib.db.states.iter.IterSMTestForm());
 			//Application.Run(new lib.db.states.bt.BtSMTestForm());
 			//Application.Run(new MemoInGridForm());
-			//Application.Run(new TreeViewForm());
-			//Application.Run(new Form3_MassiveReplace());
+			//Application.Run(new TreeViewForm());			
 			//Application.Run(new Form4_EnableDisableControls());
 			//Application.Run(new Form5_DataTableTest());
-			Application.Run(new Form6());
+			//Application.Run(new Form6());
+			//Application.Run(new Form3_MassiveReplace());
+			Application.Run(new Form_DragDrop());
 		}
 	}
 }
