@@ -1,4 +1,5 @@
-﻿using DevExpress.XtraGrid;
+﻿using DevExpress.Utils.DragDrop;
+using DevExpress.XtraGrid;
 using DevExpress.XtraGrid.Views.Grid;
 using DevExpress.XtraGrid.Views.Grid.ViewInfo;
 using lib.db.doc.niterdoc;
@@ -24,6 +25,11 @@ namespace app.testing
 		private GridBindingSource _bs2;
 		GridHitInfo downHitInfo = null;
 
+		private PictureBox c;
+		private Bitmap bmp;
+
+//		DragManager mm;
+
 		public Form_DragDrop()
 		{
 			InitializeComponent();
@@ -35,6 +41,11 @@ namespace app.testing
 			_bs2 = new GridBindingSource();
 			gridControl1.DataSource = _bs1;
 			gridControl2.DataSource = _bs2;
+
+			c = new PictureBox();
+			this.Controls.Add(c);
+			c.BringToFront();
+			c.Hide();
 		}
 
 		private void simpleButton1_Click(object sender, EventArgs e)
@@ -78,6 +89,8 @@ namespace app.testing
 					view.GridControl.DoDragDrop(selectedRows, DragDropEffects.Move);
 					downHitInfo = null;
 					DevExpress.Utils.DXMouseEventArgs.GetMouseArgs(e).Handled = true;
+					//Cursor tmpC = new Cursor("c:\\Temp\\400x700.jpg");
+					//view.GridControl.Cursor = tmpC;
 
 
 					//Single select
@@ -94,13 +107,37 @@ namespace app.testing
 			}
 		}
 
+		Rectangle rect;
 		private void gridControl2_DragOver(object sender, DragEventArgs e)
 		{
-			//if (e.Data.GetDataPresent(typeof(iter)))
+
 			if (e.Data.GetDataPresent(typeof(List<iter>)))
+			{
+				//e.Effect = DragDropEffects.Move;
+				if (c.Visible == false)
+				{
+					bmp = new Bitmap(rect.Width + 100, rect.Height + 100);					
+					//bmp.o
+					gridView1.GridControl.DrawToBitmap(bmp, new Rectangle(0, 0, 100+100, 100+100));					
+					c.Image = bmp;
+					c.Width = rect.Width + 100;
+					c.Height = rect.Height + 100;
+				}
+
+				c.Show();
 				e.Effect = DragDropEffects.Move;
+				Point p = PointToClient(MousePosition);
+				p.X += 2;
+				p.Y += 2;
+				//c.
+				c.Location = p;				
+			}
 			else
+			{
+				//e.Effect = DragDropEffects.None;
 				e.Effect = DragDropEffects.None;
+				c.Hide();
+			}
 		}
 
 		private void gridControl2_DragDrop(object sender, DragEventArgs e)
@@ -113,6 +150,7 @@ namespace app.testing
 				_bs2.Add(obj);
 				_bs1.Remove(obj);			
 			}
+			c.Hide();
 
 
 			//Single select
@@ -132,6 +170,17 @@ namespace app.testing
 		private void simpleButton3_Click(object sender, EventArgs e)
 		{
 			gridView1.RestoreLayoutFromXml("c:\\Temp\\tmpL.xml");
+		}
+
+		private void gridView2_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
+		{
+
+		}
+
+		private void gridView1_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
+		{
+			if (e.RowHandle == (sender as GridView).FocusedRowHandle)
+				rect = e.Bounds;
 		}
 	}
 }

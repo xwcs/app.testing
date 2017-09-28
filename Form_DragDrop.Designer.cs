@@ -28,6 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.gridControl1 = new DevExpress.XtraGrid.GridControl();
 			this.gridView1 = new DevExpress.XtraGrid.Views.Grid.GridView();
 			this.gridControl2 = new DevExpress.XtraGrid.GridControl();
@@ -35,10 +36,12 @@
 			this.simpleButton1 = new DevExpress.XtraEditors.SimpleButton();
 			this.simpleButton2 = new DevExpress.XtraEditors.SimpleButton();
 			this.simpleButton3 = new DevExpress.XtraEditors.SimpleButton();
+			this.behaviorManager1 = new DevExpress.Utils.Behaviors.BehaviorManager(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.gridControl1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridView1)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridControl2)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridView2)).BeginInit();
+			((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// gridControl1
@@ -59,6 +62,7 @@
 			this.gridView1.OptionsBehavior.Editable = false;
 			this.gridView1.OptionsSelection.EnableAppearanceFocusedCell = false;
 			this.gridView1.OptionsSelection.MultiSelect = true;
+			this.gridView1.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gridView1_CustomDrawCell);
 			this.gridView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gridView1_MouseDown);
 			this.gridView1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gridView1_MouseMove);
 			// 
@@ -80,6 +84,7 @@
 			this.gridView2.GridControl = this.gridControl2;
 			this.gridView2.Name = "gridView2";
 			this.gridView2.OptionsBehavior.Editable = false;
+			this.gridView2.CustomDrawCell += new DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventHandler(this.gridView2_CustomDrawCell);
 			// 
 			// simpleButton1
 			// 
@@ -124,6 +129,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.gridView1)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridControl2)).EndInit();
 			((System.ComponentModel.ISupportInitialize)(this.gridView2)).EndInit();
+			((System.ComponentModel.ISupportInitialize)(this.behaviorManager1)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -137,5 +143,6 @@
 		private DevExpress.XtraEditors.SimpleButton simpleButton1;
 		private DevExpress.XtraEditors.SimpleButton simpleButton2;
 		private DevExpress.XtraEditors.SimpleButton simpleButton3;
+		private DevExpress.Utils.Behaviors.BehaviorManager behaviorManager1;
 	}
 }
