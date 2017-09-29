@@ -27,6 +27,8 @@ namespace app.testing
 
 		private PictureBox c;
 		private Bitmap bmp;
+		private Point pointDown;
+		private int iTmpY;
 
 //		DragManager mm;
 
@@ -63,7 +65,12 @@ namespace app.testing
 
 			//if (e.Button == MouseButtons.Left && hitInfo.RowHandle >= 0)
 			if (e.Button == MouseButtons.Left && hitInfo.InRow && hitInfo.HitTest != GridHitTest.RowIndicator)
+			{ 
 				downHitInfo = hitInfo;
+				pointDown = gridControl1.PointToClient(MousePosition);
+				Console.WriteLine(pointDown.X);
+				Console.WriteLine(pointDown.Y);
+			}	
 		}
 
 		private void gridView1_MouseMove(object sender, MouseEventArgs e)
@@ -107,21 +114,34 @@ namespace app.testing
 			}
 		}
 
+		private void CopyRegionIntoImage(Bitmap srcBitmap, Rectangle srcRegion, ref Bitmap destBitmap, Rectangle destRegion)
+		{
+			using (Graphics grD = Graphics.FromImage(destBitmap))
+			{
+				grD.DrawImage(srcBitmap, destRegion, srcRegion, GraphicsUnit.Pixel);
+			}
+		}
+
 		Rectangle rect;
 		private void gridControl2_DragOver(object sender, DragEventArgs e)
 		{
-
 			if (e.Data.GetDataPresent(typeof(List<iter>)))
 			{
 				//e.Effect = DragDropEffects.Move;
 				if (c.Visible == false)
 				{
-					bmp = new Bitmap(rect.Width + 100, rect.Height + 100);					
-					//bmp.o
-					gridView1.GridControl.DrawToBitmap(bmp, new Rectangle(0, 0, 100+100, 100+100));					
-					c.Image = bmp;
-					c.Width = rect.Width + 100;
-					c.Height = rect.Height + 100;
+					rect.Width = gridView1.GridControl.ClientRectangle.Width;
+					rect.Height = gridView1.GridControl.ClientRectangle.Height;
+					bmp = new Bitmap(rect.Width, rect.Height);
+
+					
+					gridView1.GridControl.DrawToBitmap(bmp, new Rectangle(0, 0, rect.Width, rect.Height));
+					Bitmap bmp2 = new Bitmap(rect.Width, 20);
+					CopyRegionIntoImage(bmp, new Rectangle(0, /*pointDown.Y - 15*/iTmpY, rect.Width, 20), ref bmp2, new Rectangle(0, 0, rect.Width, 20));
+
+					c.Image = bmp2;
+					c.Width = rect.Width;
+					c.Height = 20;
 				}
 
 				c.Show();
@@ -129,7 +149,6 @@ namespace app.testing
 				Point p = PointToClient(MousePosition);
 				p.X += 2;
 				p.Y += 2;
-				//c.
 				c.Location = p;				
 			}
 			else
@@ -179,8 +198,14 @@ namespace app.testing
 
 		private void gridView1_CustomDrawCell(object sender, DevExpress.XtraGrid.Views.Base.RowCellCustomDrawEventArgs e)
 		{
+			
 			if (e.RowHandle == (sender as GridView).FocusedRowHandle)
-				rect = e.Bounds;
+			{
+				iTmpY = e.Bounds.Y;
+				//rect = e.Bounds;
+				//rect.Width = 300;
+				//rect.Height = 300;
+			}
 		}
 	}
 }
