@@ -17,7 +17,7 @@ namespace app.testing
 	public partial class Form5_DataTableTest : Form
 	{
 		private lib.db.doc.niterdoc.NiterDocEntities ctx;
-		private DataTable _dataTable;
+		//private DataTable _dataTable;
 		//private BindingSource _bs = new BindingSource();
 		private GridBindingSource _gbs = new GridBindingSource();
 		public Form5_DataTableTest()
@@ -146,7 +146,7 @@ namespace app.testing
 
 				//throw new ApplicationException("Problem with saving in XW!");
 			}
-			catch (Exception ex)
+			catch (Exception)
 			{
 				return;
 			}
