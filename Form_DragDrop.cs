@@ -68,8 +68,8 @@ namespace app.testing
 			{ 
 				downHitInfo = hitInfo;
 				pointDown = gridControl1.PointToClient(MousePosition);
-				Console.WriteLine(pointDown.X);
-				Console.WriteLine(pointDown.Y);
+				//Console.WriteLine(pointDown.X);
+				//Console.WriteLine(pointDown.Y);
 			}	
 		}
 
