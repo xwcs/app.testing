@@ -154,6 +154,12 @@
     <Compile Include="Form_DragDrop.Designer.cs">
       <DependentUpon>Form_DragDrop.cs</DependentUpon>
     </Compile>
+    <Compile Include="Intervals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Intervals.Designer.cs">
+      <DependentUpon>Intervals.cs</DependentUpon>
+    </Compile>
     <Compile Include="MemoInGridForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -195,6 +201,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form_DragDrop.resx">
       <DependentUpon>Form_DragDrop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Intervals.resx">
+      <DependentUpon>Intervals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MemoInGridForm.resx">
       <DependentUpon>MemoInGridForm.cs</DependentUpon>
