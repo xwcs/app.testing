@@ -139,7 +139,7 @@ namespace app.testing
 					_db.AttachNewMedia(it, newId, isMain);
 
 					// notify
-					//_wes_OnIterChaged?.Raise(this, new IterDocumentChangedEnventArgs() { iter = it });
+					//_wes_OnIterChanged?.Raise(this, new IterDocumentChangedEnventArgs() { iter = it });
 
 					//return new { success = true };
 				}
